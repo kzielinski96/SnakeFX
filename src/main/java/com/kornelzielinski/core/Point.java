@@ -28,13 +28,16 @@ public class Point {
         this.y = y;
     }
 
+    public Point translate(int dx, int dy) {
+        return new Point(x + dx, y + dy);
+    }
+
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Point)) return false;
         Point point = (Point) o;
-        return x == point.x &&
-                y == point.y;
+        return x == point.x & y == point.y;
     }
 
     @Override

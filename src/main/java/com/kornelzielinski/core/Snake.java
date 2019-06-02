@@ -1,106 +1,99 @@
 package com.kornelzielinski.core;
 
-import java.util.ArrayList;
+import javafx.scene.paint.Color;
+
+import java.util.LinkedList;
 import java.util.List;
 
 public class Snake {
+    public static final Color COLOR = Color.CORNSILK;
+    public static final Color DEAD = Color.RED;
 
-    private Direction direction;
-    private Point headLocation = new Point(0,0);
-    private List<Point> tail = new ArrayList<Point>();
-    private int height;
-    private int width;
-    private int blockSize;
-    private boolean collidedWithWall = false;
+    private Grid grid;
+    private int length;
+    private boolean safe;
+    private List<Point> points;
+    private Point head;
+    private int x_vel;
+    private int y_vel;
 
-    public Snake(int height, int width, int blockSize) {
-        this.direction = Direction.RIGHT;
-        this.height = height;
-        this.width = width;
-        this.blockSize = blockSize;
+    public Snake (Grid grid, Point point) {
+        length = 1;
+        points = new LinkedList<>();
+        points.add(point);
+        head = point;
+        safe = true;
+        this.grid = grid;
+        x_vel = 0;
+        y_vel = 0;
     }
 
-    public void update() {
+    public boolean isSafe() {
+        return safe || length == 1;
+    }
 
-        if (tail.size() > 0) {
-            tail.remove(tail.size() - 1);
-            tail.add(0, new Point(headLocation.getX(), headLocation.getY()));
-        }
+    public List<Point> getPoints() {
+        return points;
+    }
 
-        switch (direction) {
-            case UP:
-                headLocation.setY(headLocation.getY() - blockSize);
-                if (headLocation.getY() < 0) {
-                    collidedWithWall = true;
-                    headLocation.setY(0);
-                }
-                break;
-            case DOWN:
-                headLocation.setY(headLocation.getY() + blockSize);
-                if (headLocation.getY() >= height) {
-                    collidedWithWall = true;
-                    headLocation.setY(height - blockSize);
-                }
-                break;
-            case LEFT:
-                headLocation.setX(headLocation.getX() - blockSize);
-                if (headLocation.getX() < 0) {
-                    collidedWithWall = true;
-                    headLocation.setX(0);
-                }
-                break;
-            case RIGHT:
-                headLocation.setX(headLocation.getX() + blockSize);
-                if (headLocation.getX() >= width) {
-                    collidedWithWall = true;
-                    headLocation.setX(width - blockSize);
-                }
-                break;
-            default:
-                break;
+    public Point getHead() {
+        return head;
+    }
+
+    public void move() {
+        if (!isStill()) {
+            shiftTo(head.translate(x_vel, y_vel));
         }
     }
 
-    public boolean isCollidedWithWall() {
-        return collidedWithWall;
-    }
-
-    public boolean collidedWithTail() {
-        boolean isCollision = false;
-
-        for (Point tailSegment : tail) {
-            if (headLocation.equals(tailSegment)) {
-                isCollision = true;
-                break;
-            }
+    public void extend() {
+        if (!isStill()) {
+            growTo(head.translate(x_vel, y_vel));
         }
-
-        return isCollision;
     }
 
-    public void addToTail() {
-        tail.add(0, new Point(headLocation.getX(), headLocation.getY()));
-        System.out.println("Added to tail");
+    public void setUp() {
+        if (y_vel == 1 && length > 1) return;
+        x_vel = 0;
+        y_vel = -1;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
+    public void setDown() {
+        if (y_vel == -1 && length > 1) return;
+        x_vel = 0;
+        y_vel = 1;
     }
 
-    public void setHeadLocation(int x, int y) {
-        headLocation.setX(x);
-        headLocation.setY(y);
+    public void setLeft() {
+        if (x_vel == 1 && length > 1) return;
+        x_vel = -1;
+        y_vel = 0;
     }
 
-    public Point getHeadLocation() {
-        return headLocation;
+    public void setRight() {
+        if (x_vel == -1 && length > 1) return;
+        x_vel = 1;
+        y_vel = 0;
     }
 
-    public List<Point> getTail() {
-        return tail;
+    private boolean isStill() {
+        return x_vel == 0 & y_vel == 0;
     }
 
-    public int getBlockSize() {
-        return blockSize;
+    private void shiftTo (Point point) {
+        checkAndAdd(point);
+        points.remove(0);
+    }
+
+    private void checkAndAdd (Point point) {
+        point = grid.wrap(point);
+        safe &= !points.contains(point);
+        points.add(point);
+        head = point;
+    }
+
+    private void growTo(Point point) {
+        length++;
+        checkAndAdd(point);
     }
 }

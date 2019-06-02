@@ -1,47 +1,88 @@
 package com.kornelzielinski.core;
 
+import javafx.scene.paint.Color;
+
 import java.util.Random;
 
 public class Grid {
+    public static final int SIZE = 10;
+    public static final Color COLOR = new Color(0.1, 0.1, 0.1, 1);
 
-    private int height;
-    private int width;
-    private int pixelsPerSquare;
-    Food food;
+    private int columns;
+    private int rows;
 
-    public Grid(int height, int width, int pixelsPerSquare) {
-        this.height = height;
-        this.width = width;
-        this.pixelsPerSquare = pixelsPerSquare;
+    private Snake snake;
+    private Food food;
+
+    public Grid(double width, double height) {
+        rows = (int) width / SIZE;
+        columns = (int) height / SIZE;
+
+        snake = new Snake(this, new Point(rows / 2, columns / 2));
+        food = new Food(getRandomPoint());
     }
 
-    public void reset() {
-        food = new Food(width/2, height/2);
+    public int getColumns() {
+        return columns;
     }
 
-    public boolean foundFood(Snake snake) {
-        boolean isIntersected = false;
-
-        if (snake.getHeadLocation().equals(food.getLocation())) {
-            isIntersected = true;
-        }
-
-        return isIntersected;
+    public int getRows() {
+        return rows;
     }
 
-    public void addFood() {
-        Random random = new Random();
-        int x = random.nextInt(width);
-        int y = random.nextInt(height);
-
-        x = Math.round(x / pixelsPerSquare) * pixelsPerSquare;
-        y = Math.round(y / pixelsPerSquare) * pixelsPerSquare;
-
-        food = new Food(x,y);
-        System.out.println(food.toString());
+    public Snake getSnake() {
+        return snake;
     }
 
     public Food getFood() {
         return food;
+    }
+
+    public double getWidth() {
+        return rows * SIZE;
+    }
+
+    public double getHeight() {
+        return columns * SIZE;
+    }
+
+    public Point wrap(Point point) {
+        int x = point.getX();
+        int y = point.getY();
+
+        if (x >= rows) {
+            x = 0;
+        }
+        if (y >= columns) {
+            y = 0;
+        }
+
+        if (x < 0) {
+            x = rows - 1;
+        }
+        if (y < 0) {
+            y = columns - 1;
+        }
+
+        return new Point(x, y);
+    }
+
+    private Point getRandomPoint() {
+        Random random = new Random();
+        Point point;
+
+        do {
+            point = new Point(random.nextInt(rows), random.nextInt(columns));
+        } while (point.equals(snake.getHead()));
+        return point;
+    }
+
+    public void update() {
+        if (food.getLocation().equals(snake.getHead())) {
+            snake.extend();
+            food.setLocation(getRandomPoint());
+        } else {
+            snake.move();
+        }
     }
 }

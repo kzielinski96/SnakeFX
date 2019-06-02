@@ -1,19 +1,21 @@
 package com.kornelzielinski.core;
 
+import javafx.scene.paint.Color;
+
 public class Food {
 
-    Point location;
+    public static final Color COLOR = Color.ROSYBROWN;
+    private Point location;
 
-    public Food (int x, int y) {
-        location = new Point(x,y);
+    public Food (Point point) {
+        location = point;
     }
 
     public Point getLocation() {
         return location;
     }
 
-    @Override
-    public String toString() {
-        return "Food[" + "location=" + location + "]";
+    public void setLocation(Point point) {
+        location = point;
     }
 }
