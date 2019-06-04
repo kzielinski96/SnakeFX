@@ -1,9 +1,6 @@
 package com.kornelzielinski.sample;
 
-import com.kornelzielinski.core.Food;
-import com.kornelzielinski.core.Grid;
-import com.kornelzielinski.core.Point;
-import com.kornelzielinski.core.Snake;
+import com.kornelzielinski.core.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -17,6 +14,9 @@ public class Painter {
 
         context.setFill(Food.COLOR);
         paintPoint(grid.getFood().getLocation(), context);
+
+        context.setFill(Obstacle.COLOR);
+        paintPoint(grid.getObstacle().getLocation(), context);
 
         Snake snake = grid.getSnake();
         context.setFill(Snake.COLOR);
@@ -32,7 +32,7 @@ public class Painter {
 
     public static void paintResetMessage(GraphicsContext context) {
         context.setFill(Color.AQUAMARINE);
-        context.fillText("Hit RETURN to reset.",10,10);
+        context.fillText("Hit ENTER to reset.",10,10);
     }
 
     private static void paintPoint(Point point, GraphicsContext context) {

@@ -16,7 +16,7 @@ public class Game implements Runnable {
     public Game(final Grid grid, final GraphicsContext context) {
         this.grid = grid;
         this.context = context;
-        frameRate = 20;
+        setFrameRate(20);
         interval = 1000.0f / frameRate;
         running = true;
         paused = false;
@@ -50,24 +50,12 @@ public class Game implements Runnable {
         }
     }
 
-    public void stop() {
-        running = false;
-    }
-
-    public void resume() {
-        paused = false;
-    }
-
     public void pause() {
         paused = true;
     }
 
     public boolean isPaused() {
         return paused;
-    }
-
-    public int getFrameRate() {
-        return frameRate;
     }
 
     public void setFrameRate(int frameRate) {

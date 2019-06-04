@@ -2,17 +2,19 @@ package com.kornelzielinski.core;
 
 import javafx.scene.paint.Color;
 
+import java.util.List;
 import java.util.Random;
 
 public class Grid {
     public static final int SIZE = 10;
-    public static final Color COLOR = new Color(0.1, 0.1, 0.1, 1);
+    public static final Color COLOR = Color.LIGHTGRAY;
 
     private int columns;
     private int rows;
 
     private Snake snake;
     private Food food;
+    private Obstacle  obstacle;
 
     public Grid(double width, double height) {
         rows = (int) width / SIZE;
@@ -20,14 +22,11 @@ public class Grid {
 
         snake = new Snake(this, new Point(rows / 2, columns / 2));
         food = new Food(getRandomPoint());
+        obstacle = new Obstacle(getRandomPoint());
     }
 
-    public int getColumns() {
-        return columns;
-    }
-
-    public int getRows() {
-        return rows;
+    public Obstacle getObstacle() {
+        return obstacle;
     }
 
     public Snake getSnake() {
@@ -51,16 +50,20 @@ public class Grid {
         int y = point.getY();
 
         if (x >= rows) {
+//            snake.setSafe(false);
             x = 0;
         }
         if (y >= columns) {
+//            snake.setSafe(false);
             y = 0;
         }
 
         if (x < 0) {
+//            snake.setSafe(false);
             x = rows - 1;
         }
         if (y < 0) {
+//            snake.setSafe(false);
             y = columns - 1;
         }
 
@@ -81,6 +84,9 @@ public class Grid {
         if (food.getLocation().equals(snake.getHead())) {
             snake.extend();
             food.setLocation(getRandomPoint());
+            obstacle.setLocation(getRandomPoint());
+        } else if (obstacle.getLocation().equals(snake.getHead())){
+            snake.setSafe(false);
         } else {
             snake.move();
         }

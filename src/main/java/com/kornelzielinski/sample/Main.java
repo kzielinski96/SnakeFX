@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static final int WIDTH = 1000;
-    private static final int HEIGTH = 1000;
+    private static final int WIDTH = 500;
+    private static final int HEIGTH = 500;
 
     private Game game;
     private Grid grid;
@@ -31,6 +31,7 @@ public class Main extends Application {
             if (game.isKeyIsPressed()) {
                 return;
             }
+            game.setKeyIsPressed(true);
             switch (e.getCode()) {
                 case UP:
                     snake.setUp();

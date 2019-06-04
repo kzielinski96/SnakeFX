@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Food {
 
-    public static final Color COLOR = Color.ROSYBROWN;
+    public static final Color COLOR = Color.GREEN;
     private Point location;
 
     public Food (Point point) {

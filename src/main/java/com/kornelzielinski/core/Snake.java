@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Snake {
-    public static final Color COLOR = Color.CORNSILK;
+    public static final Color COLOR = Color.BLACK;
     public static final Color DEAD = Color.RED;
 
     private Grid grid;
@@ -74,6 +74,10 @@ public class Snake {
         if (x_vel == -1 && length > 1) return;
         x_vel = 1;
         y_vel = 0;
+    }
+
+    public void setSafe(boolean safe) {
+        this.safe = safe;
     }
 
     private boolean isStill() {
